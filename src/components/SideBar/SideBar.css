@@ -1,0 +1,46 @@
+.sidebar {
+  background-color: #1e293b;
+  color: white;
+  width: 260px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.sidebar-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  color: #f8fafc;
+}
+.sidebar-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.sidebar-btn {
+  background: none;
+  border: none;
+  color: #94a3b8;
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+.sidebar-btn:hover, .sidebar-btn.active {
+  background-color: #334155;
+  color: white;
+}
+.sidebar-footer {
+  border-top: 1px solid #334155;
+  padding-top: 1rem;
+  font-size: 0.85rem;
+}
+.logout-link {
+  color: #ef4444;
+  cursor: pointer;
+  margin-top: 0.5rem;
+  display: block;
+}
