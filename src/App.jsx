@@ -16,12 +16,14 @@ export default function App() {
     localStorage.removeItem('sessionUser');
   };
 
+  const isAdmin = userEmail === 'admin@ulima.edu.pe';
+
   return (
     <>
       {!userEmail ? (
         <Login onLogin={handleLogin} />
       ) : (
-        <Dashboard userEmail={userEmail} onLogout={handleLogout} />
+        <Dashboard userEmail={userEmail} onLogout={handleLogout} isAdmin={isAdmin} />
       )}
     </>
   );
