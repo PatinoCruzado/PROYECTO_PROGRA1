@@ -18,13 +18,14 @@ export default function Login({ onLogin }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const cleanEmail = email.trim().toLowerCase();
     
     const storedUsers = localStorage.getItem('usuarios_registrados');
     const usuarios = storedUsers ? JSON.parse(storedUsers) : [];
 
     if (isRegistering) {
-      const existePredeterminado = email.trim() === USUARIO_PREDETERMINADO.email || email.trim() === ADMIN_PREDETERMINADO.email;
-      const existeEnStorage = usuarios.some(u => u.email === email.trim());
+      const existePredeterminado = cleanEmail === USUARIO_PREDETERMINADO.email || cleanEmail === ADMIN_PREDETERMINADO.email;
+      const existeEnStorage = usuarios.some(u => u.email === cleanEmail);
 
       if (existePredeterminado || existeEnStorage) {
         alert('❌ El usuario ya se encuentra registrado.');
@@ -32,23 +33,23 @@ export default function Login({ onLogin }) {
       }
 
       const nuevoUsuario = {
-        email: email.trim(),
+        email: cleanEmail,
         password: password
       };
 
       usuarios.push(nuevoUsuario);
       localStorage.setItem('usuarios_registrados', JSON.stringify(usuarios));
-      alert('✅ Usuario creado con éxito. Ahora puedes iniciar sesión.');
+      alert('✅ Cuenta creada con éxito. Ya puedes iniciar sesión.');
       setIsRegistering(false);
       setEmail('');
       setPassword('');
     } else {
-      const esPredeterminado = email.trim() === USUARIO_PREDETERMINADO.email && password === USUARIO_PREDETERMINADO.password;
-      const esAdmin = email.trim() === ADMIN_PREDETERMINADO.email && password === ADMIN_PREDETERMINADO.password;
-      const esRegistrado = usuarios.some(u => u.email === email.trim() && u.password === password);
+      const esPredeterminado = cleanEmail === USUARIO_PREDETERMINADO.email && password === USUARIO_PREDETERMINADO.password;
+      const esAdmin = cleanEmail === ADMIN_PREDETERMINADO.email && password === ADMIN_PREDETERMINADO.password;
+      const esRegistrado = usuarios.some(u => u.email === cleanEmail && u.password === password);
 
       if (esPredeterminado || esAdmin || esRegistrado) {
-        onLogin(email.trim());
+        onLogin(cleanEmail);
       } else {
         alert('❌ Correo o contraseña incorrectos.');
         setPassword('');
@@ -57,24 +58,28 @@ export default function Login({ onLogin }) {
   };
 
   return (
-    <div className={`login-container ${isRegistering ? 'mode-register' : 'mode-login'}`}>
+    <div className="login-container">
+      <div className="login-decor-blob"></div>
       <div className="login-card">
-        <div className="login-icon">
-          {isRegistering ? '📝' : '🏛️'}
+        <div className="login-header">
+          <div className="ulima-logo-placeholder">
+            <span>U</span>Ulima
+          </div>
+          <h2 className="login-title">
+            {isRegistering ? 'Crear Cuenta' : 'Portal MyUlima'}
+          </h2>
+          <p className="login-subtitle">
+            {isRegistering ? 'Plataforma de eventos e inscripciones' : 'Inicia sesión con tu cuenta institucional'}
+          </p>
         </div>
-        <h2 className="login-title">
-          {isRegistering ? 'Crear Cuenta' : 'Portal MyUlima'}
-        </h2>
-        <p className="login-subtitle">
-          {isRegistering ? 'Únete a la plataforma de inscripciones' : 'Bienvenido al sistema de alumnos'}
-        </p>
         
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="login-form">
           <div className="input-group">
-            <label>Correo Institucional</label>
+            <label htmlFor="email">Correo Institucional</label>
             <input
+              id="email"
               type="email"
-              placeholder="ejemplo@ulima.edu.pe"
+              placeholder="alumno@ulima.edu.pe"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="login-input"
@@ -83,10 +88,11 @@ export default function Login({ onLogin }) {
           </div>
 
           <div className="input-group">
-            <label>Contraseña</label>
+            <label htmlFor="password">Contraseña</label>
             <input
+              id="password"
               type="password"
-              placeholder="********"
+              placeholder="••••••••"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="login-input"
@@ -94,8 +100,8 @@ export default function Login({ onLogin }) {
             />
           </div>
 
-          <button type="submit" className={`login-btn ${isRegistering ? 'btn-register' : 'btn-login'}`}>
-            {isRegistering ? 'Confirmar Registro' : 'Iniciar Sesión'}
+          <button type="submit" className="login-btn">
+            {isRegistering ? 'Registrarse' : 'Ingresar'}
           </button>
         </form>
 
@@ -108,7 +114,7 @@ export default function Login({ onLogin }) {
             }}
             className="toggle-btn"
           >
-            {isRegistering ? '¿Ya tienes una cuenta? Ingresa aquí' : '¿Eres nuevo? Crea una cuenta aquí'}
+            {isRegistering ? '¿Ya tienes cuenta? Inicia sesión' : '¿Eres nuevo estudiante? Regístrate aquí'}
           </button>
         </div>
       </div>

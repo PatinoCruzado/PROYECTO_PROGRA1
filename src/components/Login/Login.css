@@ -1,126 +1,220 @@
-/* src/components/Login/Login.css */
+/* ==========================================================================
+   INTERFAZ DE LOGIN PREMIUM (RESPETANDO EL JSX ORIGINAL DE TU AMIGO)
+   ========================================================================== */
+
+/* Contenedor maestro - Distribución en pantalla dividida usando Flexbox */
 .login-container {
-  min-height: 100vh;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  transition: background-color 0.5s ease;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  width: 100vw;
+  height: 100vh;
+  background-color: #ffffff;
+  font-family: 'Inter', sans-serif;
+  overflow: hidden;
+  position: relative;
 }
 
-.mode-login {
-  background-color: #ee8e20;
+/* 🎨 PANEL IZQUIERDO: Reutilizamos el blob original usando un gradiente corporativo interactivo
+   que mezcla el naranja y gris oscuro de la universidad (¡Nunca se quedará en gris plano!) */
+.login-decor-blob {
+  flex: 1.2;
+  height: 100%;
+  border-radius: 0; /* Quitamos la forma de blob para expandirlo como panel real */
+  background: linear-gradient(135deg, #1b1b1d 0%, #2e2f36 40%, #f27022 100%);
+  position: relative;
+  display: block;
 }
 
-.mode-register {
-  background-color: #1e293b;
+/* Patrón sutil geométrico de fondo para darle textura premium */
+.login-decor-blob::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.05;
+  background-image: radial-gradient(#ffffff 2px, transparent 2px);
+  background-size: 24px 24px;
 }
 
+/* Texto flotante elegante en la base del panel izquierdo */
+.login-decor-blob::after {
+  content: "Portal de Eventos e Inscripciones";
+  position: absolute;
+  bottom: 60px;
+  left: 60px;
+  right: 60px;
+  color: #ffffff;
+  font-family: 'Hanken Grotesk', sans-serif;
+  font-size: 38px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.5px;
+  text-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* --- Panel Derecho (Caja del Formulario) --- */
 .login-card {
-  background: white;
-  padding: 3rem;
-  border-radius: 20px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-  width: 100%;
-  max-width: 420px;
-  text-align: center;
-  transition: transform 0.3s ease;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 60px;
+  background-color: #ffffff;
+  box-shadow: none;
+  border-radius: 0;
+  max-width: 460px;
+  margin: 0 auto;
+  animation: fadeInWorkspace 0.3s ease-out;
 }
 
-.login-icon {
-  font-size: 3rem;
-  margin-bottom: 1rem;
+/* Encabezado del Formulario */
+.login-header {
+  margin-bottom: 32px;
+  text-align: left;
+}
+
+/* Logotipo minimalista estructurado en el JSX de tu amigo */
+.ulima-logo-placeholder {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Hanken Grotesk', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: #1b1b1d;
+  margin-bottom: 24px;
+}
+
+/* Inicial "U" decorativa dentro del span */
+.ulima-logo-placeholder span {
+  background-color: #f27022;
+  color: #ffffff;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 800;
 }
 
 .login-title {
-  font-size: 1.75rem;
-  font-weight: 800;
-  color: #0f172a;
-  margin: 0;
+  font-family: 'Hanken Grotesk', sans-serif;
+  font-size: 32px;
+  font-weight: 700;
+  color: #1b1b1d;
+  margin: 0 0 6px 0;
+  letter-spacing: -0.5px;
 }
 
 .login-subtitle {
-  color: #64748b;
-  font-size: 0.9rem;
-  margin-bottom: 2rem;
+  font-size: 14px;
+  color: #7f8087;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* --- Formulario e Inputs --- */
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 .input-group {
-  text-align: left;
-  margin-bottom: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
 .input-group label {
-  display: block;
-  font-size: 0.8rem;
+  font-size: 13px;
   font-weight: 600;
-  color: #475569;
-  margin-bottom: 0.5rem;
-  text-transform: uppercase;
+  color: #45464d;
 }
 
+/* Inputs estilizados con enfoque dinámico */
 .login-input {
-  width: 100%;
-  padding: 0.85rem;
-  border: 2px solid #e2e8f0;
-  border-radius: 10px;
-  font-size: 1rem;
-  box-sizing: border-box;
-  transition: border-color 0.2s;
+  padding: 12px 14px;
+  font-size: 14px;
+  border: 1px solid #eae7e9;
+  border-radius: 8px;
+  outline: none;
+  background-color: #fcf8fa;
+  color: #1b1b1d;
+  transition: all 0.2s ease;
 }
 
 .login-input:focus {
-  outline: none;
-  border-color: #ff6b00;
+  border-color: #f27022;
+  background-color: #ffffff;
+  box-shadow: 0 0 0 4px rgba(242, 112, 34, 0.08);
 }
 
+/* --- Botón Principal de Envío --- */
 .login-btn {
-  width: 100%;
-  padding: 1rem;
+  background-color: #1b1b1d;
+  color: #ffffff;
   border: none;
-  border-radius: 10px;
-  color: white;
-  font-size: 1rem;
-  font-weight: 700;
+  padding: 14px;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: 8px;
   cursor: pointer;
-  margin-top: 1rem;
-  transition: all 0.3s ease;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+  margin-top: 10px;
+  text-align: center;
 }
 
-.btn-login {
-  background-color: #ff6b00;
+.login-btn:hover {
+  background-color: #f27022;
 }
 
-.btn-login:hover {
-  background-color: #e05e00;
-  transform: translateY(-2px);
+.login-btn:active {
+  transform: scale(0.98);
 }
 
-.btn-register {
-  background-color: #3b82f6;
-}
-
-.btn-register:hover {
-  background-color: #2563eb;
-  transform: translateY(-2px);
-}
-
+/* Enlace inferior de alternancia (¿Eres nuevo estudiante?...) */
 .login-toggle-container {
-  margin-top: 2rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid #f1f5f9;
+  margin-top: 24px;
+  text-align: center;
 }
 
 .toggle-btn {
   background: none;
   border: none;
-  color: #64748b;
-  font-weight: 600;
-  font-size: 0.85rem;
+  color: #7f8087;
+  font-size: 13px;
+  font-weight: 500;
   cursor: pointer;
+  transition: color 0.2s ease;
+  padding: 4px 8px;
 }
 
 .toggle-btn:hover {
-  color: #ff6b00;
+  color: #f27022;
   text-decoration: underline;
+}
+
+/* --- Animación de Entrada Suave --- */
+@keyframes fadeInWorkspace {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* --- Responsividad para Pantallas Pequeñas/Móviles --- */
+@media (max-width: 840px) {
+  .login-decor-blob {
+    display: none; /* Oculta el degradado izquierdo en celulares para centrar el formulario */
+  }
+  .login-card {
+    flex: 1;
+    max-width: 100%;
+    padding: 32px 24px;
+  }
 }

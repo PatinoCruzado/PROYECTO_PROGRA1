@@ -1,46 +1,176 @@
-.sidebar {
-  background-color: #1e293b;
-  color: white;
+.sidebar-master-panel {
   width: 260px;
-  padding: 1.5rem;
+  height: 100%;
+  background-color: #ffffff;
+  border-right: 1px solid #eae7e9;
   display: flex;
   flex-direction: column;
+  padding: 32px 16px;
+  box-sizing: border-box;
   justify-content: space-between;
 }
-.sidebar-title {
-  font-size: 1.25rem;
-  font-weight: 700;
-  margin-bottom: 2rem;
-  color: #f8fafc;
-}
-.sidebar-menu {
+
+.sidebar-navigation-group {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 6px;
+  margin-bottom: 28px;
 }
-.sidebar-btn {
-  background: none;
+
+.sidebar-group-title {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  color: #9c9ca4;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding-left: 12px;
+  margin-bottom: 8px;
+}
+
+/* BOTÓN BASE DEL MENÚ */
+.sidebar-menu-btn {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  background: transparent;
   border: none;
-  color: #94a3b8;
-  padding: 0.75rem 1rem;
-  text-align: left;
+  padding: 10px 12px;
   border-radius: 8px;
   cursor: pointer;
+  gap: 12px;
+  position: relative;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sidebar-btn-text {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
   font-weight: 500;
-  transition: all 0.2s;
+  color: #45464d;
+  transition: color 0.2s ease;
 }
-.sidebar-btn:hover, .sidebar-btn.active {
-  background-color: #334155;
-  color: white;
+
+/* ICONOS VECTORIALES ESTILO PREMIUM */
+.sidebar-icon {
+  width: 18px;
+  height: 18px;
+  color: #7f8087;
+  transition: color 0.2s ease, transform 0.2s ease;
 }
-.sidebar-footer {
-  border-top: 1px solid #334155;
-  padding-top: 1rem;
-  font-size: 0.85rem;
+
+/* EFECTOS HOVER (PASAR EL MOUSE) */
+.sidebar-menu-btn:hover {
+  background-color: #f7f4f6;
 }
-.logout-link {
-  color: #ef4444;
-  cursor: pointer;
-  margin-top: 0.5rem;
+
+.sidebar-menu-btn:hover .sidebar-icon {
+  color: #1b1b1d;
+  transform: translateX(1px);
+}
+
+.sidebar-menu-btn:hover .sidebar-btn-text {
+  color: #1b1b1d;
+}
+
+/* ESTADO ACTIVO (SELECCIONADO) */
+.sidebar-menu-btn.active {
+  background-color: #fef1e9; /* Sutil tinte naranja institucional */
+}
+
+.sidebar-menu-btn.active .sidebar-icon {
+  color: #f27022; /* Color de marca */
+}
+
+.sidebar-menu-btn.active .sidebar-btn-text {
+  color: #f27022;
+  font-weight: 600;
+}
+
+/* BADGE CONTADOR DE INSCRIPCIONES */
+.sidebar-counter-badge {
+  margin-left: auto;
+  background-color: #f27022;
+  color: #ffffff;
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(242, 112, 34, 0.2);
+}
+
+/* FOOTER DEL PANEL */
+.sidebar-footer-account {
+  border-top: 1px solid #eae7e9;
+  padding-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sidebar-user-meta {
+  padding: 0 12px;
+}
+
+.sidebar-user-email-text {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  color: #7f8087;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   display: block;
+}
+
+/* BOTÓN DE CIERRE DE SESIÓN */
+.sidebar-logout-action-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: transparent;
+  border: none;
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #45464d;
+  transition: all 0.2s ease;
+}
+
+.logout-icon {
+  width: 18px;
+  height: 18px;
+  color: #7f8087;
+  transition: color 0.2s ease;
+}
+
+.sidebar-logout-action-btn:hover {
+  background-color: #fef2f2; /* Tinte rojo sutil de alerta */
+  color: #ef4444;
+}
+
+.sidebar-logout-action-btn:hover .logout-icon {
+  color: #ef4444;
+}
+
+@media (max-width: 768px) {
+  .sidebar-master-panel {
+    width: 100%;
+    height: auto;
+    border-right: none;
+    border-bottom: 1px solid #eae7e9;
+    padding: 16px;
+  }
+  .sidebar-navigation-group {
+    flex-direction: row;
+    overflow-x: auto;
+    padding-bottom: 8px;
+    margin-bottom: 12px;
+  }
+  .sidebar-group-title { display: none; }
+  .sidebar-footer-account { display: none; }
 }

@@ -1,42 +1,29 @@
 export const INITIAL_ITEMS = [
   {
     id: 1,
-    tipo: 'Taller',
-    titulo: 'Introducción a Inteligencia Artificial con Python',
-    facultad: 'Ingeniería de Sistemas',
-    fecha: '2026-06-15',
-    descripcion: 'Aprende los fundamentos de Machine Learning y Deep Learning desde cero. Incluye laboratorios prácticos.',
-    estado: 'Inscripciones Abiertas',
-    resultados: 'N/A - Evento formativo'
+    titulo: "Sistemas de Diseño UI Avanzados",
+    tipo: "Workshop",
+    fecha: "Oct 24, 2026 • 14:00 PM",
+    lugar: "Laboratorio de Innovación - Aula 420",
+    // Imagen limpia de desarrollo de software
+    imagen: "https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&w=600&q=80"
   },
   {
     id: 2,
-    tipo: 'Torneo',
-    titulo: 'Campeonato Interfacultades de Ajedrez 2026',
-    facultad: 'Ciencias de la Salud',
-    fecha: '2026-06-20',
-    descripcion: 'Torneo oficial bajo sistema suizo. Válido para el ranking universitario.',
-    estado: 'Finalizado',
-    resultados: '🥇 1er Lugar: Carlos Mendoza (Medicina) | 🥈 2do Lugar: Ana Gómez (Enfermería)'
+    titulo: "Liga de Esports Interfacultades",
+    tipo: "Tournament",
+    fecha: "Oct 28 - Nov 05",
+    lugar: "Arena Virtual / Auditorio Principal",
+    // Imagen limpia de gaming/esports
+    imagen: "https://images.unsplash.com/photo-1538481199705-c710c4e965fc?auto=format&fit=crop&w=600&q=80"
   },
   {
     id: 3,
-    tipo: 'Evento',
-    titulo: 'Congreso Internacional de Innovación y Emprendimiento',
-    facultad: 'Ciencias Económicas',
-    fecha: '2026-07-02',
-    descripcion: 'Ponencias con speakers de nivel internacional, networking y feria de startups estudiantiles.',
-    estado: 'Inscripciones Abiertas',
-    resultados: 'Próximamente al finalizar el evento.'
-  },
-  {
-    id: 4,
-    tipo: 'Torneo',
-    titulo: 'Copa Universitaria de Esports (Valorant)',
-    facultad: 'Todas las Facultades',
-    fecha: '2026-05-10',
-    descripcion: 'Torneo de videojuegos competitivo. Inscripciones por equipos de 5 integrantes.',
-    estado: 'En Progreso',
-    resultados: 'Semifinales: Facultad de Ingeniería vs. Facultad de Arquitectura (Hoy 18:00)'
+    titulo: "Gala de Intercambio Cultural Global",
+    tipo: "Event",
+    fecha: "Nov 12 • 19:00 PM",
+    lugar: "Plaza Central Universidad",
+    // Imagen limpia de eventos/conciertos universitarios
+    imagen: "https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=600&q=80"
   }
 ];

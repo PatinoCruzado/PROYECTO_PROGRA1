@@ -1,0 +1,326 @@
+.top-nav-container {
+  height: 70px;
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid #eae7e9;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 48px;
+  box-sizing: border-box;
+  position: relative;
+  z-index: 100;
+}
+
+.top-nav-brand {
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.top-nav-brand:hover {
+  transform: scale(1.02);
+}
+
+.brand-title-main {
+  font-family: 'Hanken Grotesk', sans-serif;
+  font-size: 24px;
+  font-weight: 800;
+  color: #1b1b1d;
+  letter-spacing: -0.02em;
+}
+
+.top-nav-links {
+  display: flex;
+  gap: 32px;
+  height: 100%;
+  align-items: center;
+}
+
+.nav-link-item {
+  background: none;
+  border: none;
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  color: #45464d;
+  cursor: pointer;
+  padding: 23px 0;
+  position: relative;
+  transition: color 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.nav-link-item:hover {
+  color: #1b1b1d;
+}
+
+.nav-link-item.active {
+  color: #f27022;
+  font-weight: 600;
+}
+
+.nav-link-item::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 50%;
+  right: 50%;
+  height: 3px;
+  background-color: #f27022;
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.nav-link-item:hover::after {
+  left: 20%;
+  right: 20%;
+  background-color: #c6c6cd;
+}
+
+.nav-link-item.active::after {
+  left: 0;
+  right: 0;
+  background-color: #f27022;
+}
+
+.top-nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+/* Campana interactiva con contador de notificaciones */
+.notification-bell-btn {
+  background: none;
+  border: none;
+  color: #45464d;
+  cursor: pointer;
+  display: flex;
+  padding: 8px;
+  border-radius: 50%;
+  position: relative;
+  transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.notification-bell-btn:hover {
+  background-color: #f0edef;
+  color: #1b1b1d;
+  transform: translateY(-2px) rotate(15px);
+}
+
+.bell-icon { width: 22px; height: 22px; }
+
+.bell-badge-count {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  background-color: #ef4444;
+  color: white;
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  min-width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid white;
+}
+
+/* Estructura del Badge de Perfil */
+.user-profile-badge {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 12px;
+  border-radius: 20px;
+}
+
+.user-avatar-img {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #eae7e9;
+  transition: border-color 0.25s ease;
+}
+
+.user-profile-badge:hover .user-avatar-img {
+  border-color: #f27022;
+}
+
+.user-info-text-block {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-name-display {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1b1b1d;
+  line-height: 1.2;
+}
+
+.user-role-sub {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  color: #7f8087;
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .top-nav-links { display: none; }
+  .top-nav-container { padding: 0 16px; }
+}
+
+/* Posicionamiento del menú de alertas */
+.notification-wrapper-relative {
+  position: relative;
+}
+
+.notifications-dropdown-menu {
+  position: absolute;
+  top: 45px;
+  right: 0;
+  width: 320px;
+  background-color: #ffffff;
+  border: 1px solid #eae7e9;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+  overflow: hidden;
+  animation: fadeInWorkspace 0.2s ease-out;
+  z-index: 500;
+}
+
+.dropdown-header {
+  padding: 14px 16px;
+  border-bottom: 1px solid #eae7e9;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: #1b1b1d;
+  background-color: #fcf8fa;
+}
+
+.dropdown-body-scroll {
+  max-height: 280px;
+  overflow-y: auto;
+  padding: 8px;
+}
+
+/* Diseño de Bandeja Vacía */
+.empty-notifications-view {
+  padding: 32px 16px;
+  text-align: center;
+  color: #9c9ca4;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+}
+
+.empty-box-icon {
+  width: 32px;
+  height: 32px;
+  color: #c6c6cd;
+  margin-bottom: 8px;
+}
+
+/* Tarjetas de notificación */
+.notification-item-card {
+  padding: 10px 12px;
+  border-radius: 8px;
+  margin-bottom: 6px;
+  font-family: 'Inter', sans-serif;
+  border-left: 3px solid #1b1b1d;
+  background-color: #fcf8fa;
+}
+
+.notification-item-card.success {
+  border-left-color: #16a34a;
+  background-color: #f0fdf4;
+}
+
+.notification-item-card.cancel {
+  border-left-color: #dc2626;
+  background-color: #fff5f5;
+}
+
+.notif-text-message {
+  font-size: 13px;
+  color: #45464d;
+  margin: 0 0 4px 0;
+  line-height: 1.4;
+}
+
+.notif-timestamp-label {
+  font-size: 11px;
+  color: #9c9ca4;
+}
+
+/* Estilo del botón de cancelación en las tarjetas */
+.btn-cancel-register {
+  background-color: #ffffff;
+  border: 1px solid #eae7e9;
+  color: #dc2626;
+}
+
+.btn-cancel-register:hover {
+  background-color: #fff5f5;
+  border-color: #feb2b2;
+}
+
+/* Estructuras extras para el panel de ajustes */
+.settings-options-card {
+  width: 100%;
+  max-width: 500px;
+  background: white;
+  border: 1px solid #eae7e9;
+  border-radius: 12px;
+  padding: 8px 16px;
+  margin-bottom: 24px;
+  text-align: left;
+}
+
+.settings-row-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 0;
+  border-bottom: 1px solid #f4f2f4;
+}
+
+.settings-row-item:last-child {
+  border-bottom: none;
+}
+
+.settings-row-item h4 {
+  margin: 0 0 2px 0;
+  font-size: 14px;
+  color: #1b1b1d;
+}
+
+.settings-row-item p {
+  margin: 0;
+  font-size: 12px;
+  color: #7f8087;
+}
+
+.settings-action-inline-btn {
+  background: #f4f2f4;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.settings-toggle-switch {
+  accent-color: #f27022;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
