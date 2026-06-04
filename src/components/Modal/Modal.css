@@ -1,14 +1,97 @@
+/* Contenedor oscuro que cubre toda la pantalla */
 .modal-overlay {
   position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(15, 23, 42, 0.6);
-  display: flex; align-items: center; justify-content: center;
-  z-index: 999;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.7); /* Fondo oscuro semitransparente detrás */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999; /* Asegura que flote por encima de todo el catálogo */
+  backdrop-filter: blur(4px); /* Suaviza el fondo */
+  padding: 20px;
+  box-sizing: border-box;
 }
-.modal-content {
-  background: white; padding: 2rem; border-radius: 12px;
-  width: 100%; max-width: 550px; box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-  position: relative; font-family: sans-serif;
+
+/* La tarjeta blanca/sólida del modal */
+.modal-card {
+  background-color: var(--surface-card, #ffffff); /* Cambia a #1b1b1d si usas modo oscuro */
+  color: var(--text-primary, #1b1b1d);
+  width: 100%;
+  max-width: 550px; /* Limita el ancho para que no se estire horizontalmente */
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  animation: modalScaleUp 0.25s ease-out;
 }
-.modal-close-btn { position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 1.25rem; cursor: pointer; color: #64748b; }
-.results-section { margin-top: 1.5rem; padding: 1rem; background-color: #f8fafc; border-left: 4px solid #ff6b00; border-radius: 4px; }
+
+/* Botón de cerrar "X" */
+.modal-close-btn {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  background: rgba(0, 0, 0, 0.4);
+  color: #ffffff;
+  border: none;
+  font-size: 24px;
+  line-height: 1;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+  transition: background 0.2s;
+}
+
+.modal-close-btn:hover {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+/* Contenedor multimedia superior */
+.modal-hero-image {
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+}
+
+.modal-hero-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Zona interna del contenido */
+.modal-body-content {
+  padding: 20px;
+}
+
+/* Estilos de los Badges traducidos */
+.modal-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+.modal-badge.workshop { background-color: rgba(242, 113, 28, 0.15); color: #f2711c; }
+.modal-badge.tournament { background-color: rgba(33, 133, 208, 0.15); color: #2185d0; }
+.modal-badge.event { background-color: rgba(35, 169, 110, 0.15); color: #23a96e; }
+
+/* Efecto de entrada suave */
+@keyframes modalScaleUp {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
