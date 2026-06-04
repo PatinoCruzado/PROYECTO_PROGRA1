@@ -7,23 +7,38 @@ import { INITIAL_ITEMS } from '../data/mockData';
 import './Dashboard.css';
 
 export default function Dashboard({ userEmail = "estudiante@ulima.edu.pe", onLogout, isAdmin = false }) {
-  const [currentTopTab, setTopTab] = useState('inicio');
-  const [activeTab, setActiveTab] = useState('todos');
-  const [selectedItem, setSelectedItem] = useState(null);
+  // === 1. ESTADOS PRINCIPALES DE LA INTERFAZ ===
+  const [currentTopTab, setTopTab] = useState('inicio'); // Controla la barra superior (Inicio, Horario, Trámites)
+  const [activeTab, setActiveTab] = useState('todos');   // Controla el menú lateral izquierdo (Filtros de catálogo)
+  const [selectedItem, setSelectedItem] = useState(null); // Guarda el ítem seleccionado para abrir la ventana modal
   
-  // ⚙️ Estado de Preferencias de Alertas (Solución al Checkbox de Ajustes)
-  const [allowNotifications, setAllowNotifications] = useState(true);
-  const [notifications, setNotifications] = useState([]);
+  // === 2. ESTADOS DE NOTIFICACIONES Y ALERTAS ===
+  const [allowNotifications, setAllowNotifications] = useState(true); // Estado del checkbox en Ajustes
+  const [notifications, setNotifications] = useState([]);             // Lista de alertas dinámicas activas
 
+  // === 3. PERSISTENCIA DE DATOS (LOCALSTORAGE) ===
+  // Carga las actividades desde la memoria del navegador. Si están corruptas o viejas, las repara al instante.
   const [activities, setActivities] = useState(() => {
     try {
       const saved = localStorage.getItem('master_activities');
-      return saved ? JSON.parse(saved) : INITIAL_ITEMS;
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        
+        // AUTO-REPARACIÓN FOTO DEL FÚTSAL: Si detecta la imagen rota antigua, reescribe la memoria
+        const itemFutsal = parsed.find(act => act.id === 5);
+        if (!itemFutsal || itemFutsal.imagen.includes('photo-1508098682722')) {
+          localStorage.setItem('master_activities', JSON.stringify(INITIAL_ITEMS));
+          return INITIAL_ITEMS;
+        }
+        return parsed;
+      }
+      return INITIAL_ITEMS;
     } catch (e) {
       return INITIAL_ITEMS;
     }
   });
 
+  // Carga los IDs de las actividades a las que el estudiante se ha inscrito
   const [registeredIds, setRegisteredIds] = useState(() => {
     try {
       const saved = localStorage.getItem(`reg_${userEmail}`);
@@ -33,6 +48,9 @@ export default function Dashboard({ userEmail = "estudiante@ulima.edu.pe", onLog
     }
   });
 
+  // === 4. LÓGICA DE CONTROLADORES (MANIPULACIÓN DEL ESTADO) ===
+  
+  // Función para inscribirse en una actividad
   const handleInscribirse = (id) => {
     if (registeredIds.includes(id)) return;
     const item = activities.find(act => act.id === id);
@@ -40,7 +58,7 @@ export default function Dashboard({ userEmail = "estudiante@ulima.edu.pe", onLog
     setRegisteredIds(updated);
     localStorage.setItem(`reg_${userEmail}`, JSON.stringify(updated));
 
-    // Solo genera notificación si el checkbox de Ajustes está activo
+    // Despliega alerta visual en el TopNav solo si el switch de Ajustes está activado
     if (item && allowNotifications) {
       const newNotif = {
         id: Date.now(),
@@ -52,13 +70,13 @@ export default function Dashboard({ userEmail = "estudiante@ulima.edu.pe", onLog
     }
   };
 
+  // Función para cancelar un cupo inscrito
   const handleCancelarInscripcion = (id) => {
     const item = activities.find(act => act.id === id);
     const updated = registeredIds.filter(regId => regId !== id);
     setRegisteredIds(updated);
     localStorage.setItem(`reg_${userEmail}`, JSON.stringify(updated));
 
-    // Solo genera notificación si el checkbox de Ajustes está activo
     if (item && allowNotifications) {
       const newNotif = {
         id: Date.now(),
@@ -70,10 +88,11 @@ export default function Dashboard({ userEmail = "estudiante@ulima.edu.pe", onLog
     }
   };
 
-  // Funciones para limpiar la bandeja de notificaciones
+  // Gestión de la campana de notificaciones
   const handleClearAllNotifications = () => setNotifications([]);
   const handleRemoveNotification = (id) => setNotifications(prev => prev.filter(n => n.id !== id));
 
+  // Funciones exclusivas del Panel de Administrador (Crear y Eliminar)
   const handleCreateActivity = (newActivity) => {
     const updated = [...activities, { ...newActivity, id: Date.now() }];
     setActivities(updated);
@@ -87,6 +106,8 @@ export default function Dashboard({ userEmail = "estudiante@ulima.edu.pe", onLog
     if (selectedItem && selectedItem.id === id) setSelectedItem(null);
   };
 
+  // === 5. PROCESAMIENTO Y FILTRADO FILTRADO DE DATOS (FRONT-END) ===
+  // Filtra dinámicamente el catálogo según la pestaña lateral que el usuario tenga activa
   const itemsFiltrados = activities.filter(item => {
     if (!item || !item.tipo) return false;
     if (activeTab === 'mis-actividades') return registeredIds.includes(item.id);
@@ -97,10 +118,17 @@ export default function Dashboard({ userEmail = "estudiante@ulima.edu.pe", onLog
     return false;
   });
 
+  // SOLUCIÓN AL BUG CONTADOR FANTASMA: Valida que las inscripciones pertenezcan a actividades reales existentes
+  const constInscritasReales = registeredIds.filter(id => 
+    activities.some(act => act.id === id)
+  );
+
+  // Extrae el alias de usuario desde su correo de la universidad
   const displayUserName = userEmail && userEmail.includes('@') ? userEmail.split('@')[0] : "Usuario";
 
+  // === 6. ENRUTADOR DE VISTAS DINÁMICAS (RENDER WORKSPACE) ===
   const renderMainWorkspace = () => {
-    // 📅 SECCIÓN: MI HORARIO ACADÉMICO (Estructura de Tabla Real)
+    // VISTA: Horario Académico del Estudiante
     if (currentTopTab === 'horario') {
       return (
         <div className="dynamic-workspace-panel animate-fade">
@@ -150,7 +178,7 @@ export default function Dashboard({ userEmail = "estudiante@ulima.edu.pe", onLog
       );
     }
 
-    // 📁 SECCIÓN: TRÁMITES ACADÉMICOS
+    // VISTA: Mesa de Trámites Administrativos
     if (currentTopTab === 'tramites') {
       return (
         <div className="dynamic-workspace-panel animate-fade">
@@ -179,14 +207,15 @@ export default function Dashboard({ userEmail = "estudiante@ulima.edu.pe", onLog
       );
     }
 
-    // ⚙️ SECCIÓN: AJUSTES (Conexión directa con el estado del checkbox)
+    // VISTA: Ajustes y Preferencias del Sistema
     if (activeTab === 'ajustes') {
       return (
-        <div className="dynamic-workspace-panel settings-view-container">
+        <div className="dynamic-workspace-panel settings-view-container animate-fade">
           <div className="panel-header-title">
             <h2>Ajustes de la Cuenta</h2>
             <p>Gestiona tus parámetros de seguridad y preferencias de la interfaz</p>
           </div>
+          
           <div className="settings-options-card">
             <div className="settings-row-item">
               <div>
@@ -195,6 +224,7 @@ export default function Dashboard({ userEmail = "estudiante@ulima.edu.pe", onLog
               </div>
               <button className="settings-action-inline-btn">Modificar</button>
             </div>
+
             <div className="settings-row-item">
               <div>
                 <h4>Preferencia de Alertas Dinámicas</h4>
@@ -207,12 +237,29 @@ export default function Dashboard({ userEmail = "estudiante@ulima.edu.pe", onLog
                 className="settings-toggle-switch" 
               />
             </div>
+
+            <div className="settings-row-item logout-row">
+              <div>
+                <h4>Sesión de Estudiante</h4>
+                <p>Salir de tu cuenta actual de forma segura en este dispositivo.</p>
+              </div>
+              <button className="settings-logout-btn" onClick={onLogout}>
+                <svg className="settings-logout-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                  <polyline points="16 17 21 12 16 7" />
+                  <line x1="21" y1="12" x2="9" y2="12" />
+                </svg>
+                <span>Salir</span>
+              </button>
+            </div>
           </div>
+
           <button className="panel-action-btn" onClick={() => setActiveTab('todos')}>Regresar al Catálogo</button>
         </div>
       );
     }
 
+    // VISTA POR DEFECTO: El Catálogo Principal (Componente Main)
     return (
       <Main 
         items={itemsFiltrados} 
@@ -229,8 +276,10 @@ export default function Dashboard({ userEmail = "estudiante@ulima.edu.pe", onLog
     );
   };
 
+  // === 7. ESTRUCTURA VISUAL COMPLETA (MAQUETADO JSX) ===
   return (
     <div className="dashboard-master-container">
+      {/* Barra de Navegación Superior */}
       <TopNav 
         userName={displayUserName} 
         currentTopTab={currentTopTab}
@@ -243,6 +292,7 @@ export default function Dashboard({ userEmail = "estudiante@ulima.edu.pe", onLog
         onRemoveNotification={handleRemoveNotification}
       />
       
+      {/* Cuerpo del Workspace Principal (Distribución Flexbox/Grid) */}
       <div className="dashboard-workspace">
         <SideBar 
           activeTab={activeTab} 
@@ -252,12 +302,13 @@ export default function Dashboard({ userEmail = "estudiante@ulima.edu.pe", onLog
           }} 
           userEmail={userEmail} 
           onLogout={onLogout} 
-          countInscritos={registeredIds.length} 
+          countInscritos={constInscritasReales.length} // Envía el conteo verificado
         />
         
         {renderMainWorkspace()}
       </div>
 
+      {/* Ventana Emergente Detallada (Modal Condicional) */}
       {selectedItem && (
         <Modal item={selectedItem} onClose={() => setSelectedItem(null)} />
       )}

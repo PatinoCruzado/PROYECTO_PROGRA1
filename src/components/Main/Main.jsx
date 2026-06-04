@@ -6,7 +6,7 @@ export default function Main({
   registeredIds = [], 
   onSelect = () => {}, 
   onRegister = () => {}, 
-  onCancelRegister = () => {}, // Recibimos la nueva función
+  onCancelRegister = () => {}, 
   activeTab = 'todos',
   isAdmin = false,
   onCreateActivity = () => {},
@@ -23,22 +23,19 @@ export default function Main({
   const [lugar, setLugar] = useState('');
   const [imagen, setImagen] = useState('');
 
-  // 🕹️ Efecto sutil calibrado a 4 grados de rotación
+  // 🕹️ EFECTO SUTIL: Calcula la posición del mouse para crear un destello de luz dinámico (Radial Gradient)
   const handleMouseMove = (e) => {
     const banner = bannerRef.current;
     if (!banner) return;
     const rect = banner.getBoundingClientRect();
-    const x = (e.clientX - rect.left) / rect.width - 0.5;
-    const y = (e.clientY - rect.top) / rect.height - 0.5;
-    banner.style.setProperty('--rotate-x', `${-y * 2}deg`);
-    banner.style.setProperty('--rotate-y', `${x * 2}deg`);
-  };
-
-  const handleMouseLeave = () => {
-    const banner = bannerRef.current;
-    if (!banner) return;
-    banner.style.setProperty('--rotate-x', '0deg');
-    banner.style.setProperty('--rotate-y', '0deg');
+    
+    // Calcula la posición exacta del cursor en píxeles dentro del banner
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    
+    // Pasamos las coordenadas exactas al CSS
+    banner.style.setProperty('--mouse-x', `${x}px`);
+    banner.style.setProperty('--mouse-y', `${y}px`);
   };
 
   const getSectionTitle = () => {
@@ -62,12 +59,11 @@ export default function Main({
   return (
     <main className="main-workspace-container">
       
-      {/* BANNER PRINCIPAL CON BOTONES OPERATIVOS */}
+      {/* BANNER PRINCIPAL CON EFECTO DE LUZ SUTIL */}
       <div 
-        className="hero-banner-card"
+        className="hero-banner-card interactive-glow"
         ref={bannerRef}
         onMouseMove={handleMouseMove}
-        onMouseLeave={handleMouseLeave}
       >
         <div className="hero-banner-content-wrapper">
           <span className="hero-badge-semester">Panel de Control {isAdmin ? 'Administrador' : 'Estudiante'}</span>
@@ -88,7 +84,6 @@ export default function Main({
               </button>
             ) : (
               <>
-                {/* 🔗 FUNCIONALIDAD ASIGNADA A LOS BOTONES DEL BANNER */}
                 <button className="hero-btn-primary" onClick={() => setActiveTab('todos')}>
                   Explorar Catálogo
                 </button>
@@ -182,7 +177,6 @@ export default function Main({
                       Eliminar Actividad
                     </button>
                   ) : (
-                    /* 🔄 INTERACCIÓN INTERCAMBIABLE: INSCRIBIRSE / CANCELAR MATRÍCULA */
                     <button 
                       className={`card-action-btn ${isRegistered ? 'btn-cancel-register' : 'btn-orange'}`}
                       onClick={(e) => {

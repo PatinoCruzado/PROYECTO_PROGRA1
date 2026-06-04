@@ -1,6 +1,9 @@
 .sidebar-master-panel {
   width: 260px;
-  height: 100%;
+  height: 100dvh; /* 💡 "dvh" (Dynamic Viewport Height) se ajusta al espacio visible real sin pasarse */
+  position: fixed; /* 💡 Lo clava a la pantalla para que sea 100% fijo al hacer scroll */
+  top: 0;
+  left: 0;
   background-color: #ffffff;
   border-right: 1px solid #eae7e9;
   display: flex;
@@ -8,6 +11,13 @@
   padding: 32px 16px;
   box-sizing: border-box;
   justify-content: space-between;
+  z-index: 100; /* Asegura que no se tapen los botones con otros componentes */
+}
+
+.sidebar-top-content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .sidebar-navigation-group {
@@ -51,15 +61,15 @@
   transition: color 0.2s ease;
 }
 
-/* ICONOS VECTORIALES ESTILO PREMIUM */
 .sidebar-icon {
   width: 18px;
   height: 18px;
   color: #7f8087;
   transition: color 0.2s ease, transform 0.2s ease;
+  flex-shrink: 0;
 }
 
-/* EFECTOS HOVER (PASAR EL MOUSE) */
+/* EFECTOS HOVER */
 .sidebar-menu-btn:hover {
   background-color: #f7f4f6;
 }
@@ -73,13 +83,13 @@
   color: #1b1b1d;
 }
 
-/* ESTADO ACTIVO (SELECCIONADO) */
+/* ESTADO ACTIVO */
 .sidebar-menu-btn.active {
-  background-color: #fef1e9; /* Sutil tinte naranja institucional */
+  background-color: #fef1e9;
 }
 
 .sidebar-menu-btn.active .sidebar-icon {
-  color: #f27022; /* Color de marca */
+  color: #f27022;
 }
 
 .sidebar-menu-btn.active .sidebar-btn-text {
@@ -87,7 +97,7 @@
   font-weight: 600;
 }
 
-/* BADGE CONTADOR DE INSCRIPCIONES */
+/* BADGE CONTADOR */
 .sidebar-counter-badge {
   margin-left: auto;
   background-color: #f27022;
@@ -149,7 +159,7 @@
 }
 
 .sidebar-logout-action-btn:hover {
-  background-color: #fef2f2; /* Tinte rojo sutil de alerta */
+  background-color: #fef2f2;
   color: #ef4444;
 }
 
@@ -157,20 +167,70 @@
   color: #ef4444;
 }
 
+/* ==========================================================
+   📱 RESPONSIVE ADAPTADO PARA IPHONE SE / TELÉFONOS (MÓVIL)
+   ========================================================== */
 @media (max-width: 768px) {
   .sidebar-master-panel {
-    width: 100%;
-    height: auto;
+    position: fixed;
+    bottom: 0;
+    top: auto;
+    left: 0;
+    width: 100vw;
+    height: 68px; /* Alto de tab-bar nativo de iOS */
     border-right: none;
-    border-bottom: 1px solid #eae7e9;
-    padding: 16px;
+    border-top: 1px solid #eae7e9;
+    padding: 4px 8px;
+    z-index: 999;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.05);
   }
+
+  .sidebar-top-content {
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-around;
+  }
+
   .sidebar-navigation-group {
     flex-direction: row;
-    overflow-x: auto;
-    padding-bottom: 8px;
-    margin-bottom: 12px;
+    width: 100%;
+    justify-content: space-around;
+    gap: 2px;
+    margin-bottom: 0;
   }
-  .sidebar-group-title { display: none; }
-  .sidebar-footer-account { display: none; }
+
+  /* Ocultamos títulos y cuentas en la vista móvil para optimizar espacio */
+  .sidebar-group-title, 
+  .sidebar-footer-account,
+  .sidebar-btn-text { 
+    display: none; 
+  }
+
+  /* Ajustamos los botones para que parezcan apps en un dock */
+  .sidebar-menu-btn {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 8px;
+    gap: 4px;
+    width: auto;
+    flex: 1;
+  }
+
+  .sidebar-icon {
+    width: 22px; /* Un poco más grandes para que sean fáciles de tocar */
+    height: 22px;
+  }
+
+  .sidebar-counter-badge {
+    position: absolute;
+    top: 2px;
+    right: 18%;
+    margin-left: 0;
+    font-size: 9px;
+    padding: 1px 5px;
+  }
 }
