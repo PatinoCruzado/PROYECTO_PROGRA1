@@ -1,59 +1,37 @@
 import React, { useState } from 'react';
+import { api } from '../../services/api';
 import './Login.css';
-
-const USUARIO_PREDETERMINADO = {
-  email: '20232182@aloe.ulima.edu.pe',
-  password: 'ulima2026'
-};
-
-const ADMIN_PREDETERMINADO = {
-  email: 'admin@ulima.edu.pe',
-  password: 'admin2026'
-};
 
 export default function Login({ onLogin }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isRegistering, setIsRegistering] = useState(false);
+  const [loading, setLoading] = useState(false); // Indicador de carga para solicitudes de red
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const cleanEmail = email.trim().toLowerCase();
-    
-    const storedUsers = localStorage.getItem('usuarios_registrados');
-    const usuarios = storedUsers ? JSON.parse(storedUsers) : [];
+    setLoading(true);
 
-    if (isRegistering) {
-      const existePredeterminado = cleanEmail === USUARIO_PREDETERMINADO.email || cleanEmail === ADMIN_PREDETERMINADO.email;
-      const existeEnStorage = usuarios.some(u => u.email === cleanEmail);
-
-      if (existePredeterminado || existeEnStorage) {
-        alert('❌ El usuario ya se encuentra registrado.');
-        return;
-      }
-
-      const nuevoUsuario = {
-        email: cleanEmail,
-        password: password
-      };
-
-      usuarios.push(nuevoUsuario);
-      localStorage.setItem('usuarios_registrados', JSON.stringify(usuarios));
-      alert('✅ Cuenta creada con éxito. Ya puedes iniciar sesión.');
-      setIsRegistering(false);
-      setEmail('');
-      setPassword('');
-    } else {
-      const esPredeterminado = cleanEmail === USUARIO_PREDETERMINADO.email && password === USUARIO_PREDETERMINADO.password;
-      const esAdmin = cleanEmail === ADMIN_PREDETERMINADO.email && password === ADMIN_PREDETERMINADO.password;
-      const esRegistrado = usuarios.some(u => u.email === cleanEmail && u.password === password);
-
-      if (esPredeterminado || esAdmin || esRegistrado) {
-        onLogin(cleanEmail);
-      } else {
-        alert('❌ Correo o contraseña incorrectos.');
+    try {
+      if (isRegistering) {
+        // Solicitud de registro real en la base de datos
+        await api.register(cleanEmail, password);
+        alert('✅ Cuenta creada con éxito. Ya puedes iniciar sesión.');
+        setIsRegistering(false);
+        setEmail('');
         setPassword('');
+      } else {
+        // Solicitud de inicio de sesión real
+        const data = await api.login(cleanEmail, password);
+        // data contiene: { email, role, token }
+        onLogin(data.email, data.role, data.token);
       }
+    } catch (error) {
+      alert(`❌ Error: ${error.message}`);
+      setPassword('');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -83,6 +61,7 @@ export default function Login({ onLogin }) {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="login-input"
+              disabled={loading}
               required
             />
           </div>
@@ -96,12 +75,13 @@ export default function Login({ onLogin }) {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="login-input"
+              disabled={loading}
               required
             />
           </div>
 
-          <button type="submit" className="login-btn">
-            {isRegistering ? 'Registrarse' : 'Ingresar'}
+          <button type="submit" className="login-btn" disabled={loading}>
+            {loading ? 'Cargando...' : isRegistering ? 'Registrarse' : 'Ingresar'}
           </button>
         </form>
 
@@ -113,6 +93,7 @@ export default function Login({ onLogin }) {
               setPassword('');
             }}
             className="toggle-btn"
+            disabled={loading}
           >
             {isRegistering ? '¿Ya tienes cuenta? Inicia sesión' : '¿Eres nuevo estudiante? Regístrate aquí'}
           </button>

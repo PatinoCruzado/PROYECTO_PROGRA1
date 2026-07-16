@@ -1,64 +1,90 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import TopNav from './TopNav/TopNav'; 
 import SideBar from './SideBar/SideBar';
 import Main from './Main/Main';
 import Modal from './Modal/Modal';
-import { INITIAL_ITEMS } from '../data/mockData';
+import { api } from '../services/api';
 import './Dashboard.css';
 
 export default function Dashboard({ userEmail = "estudiante@ulima.edu.pe", onLogout, isAdmin = false }) {
   
   // === 1. ESTADOS DE LA INTERFAZ ===
-  const [currentTopTab, setTopTab] = useState('inicio'); // Controla la barra superior (inicio, horario, tramites)
-  const [activeTab, setActiveTab] = useState('todos');   // Controla los filtros del menú lateral izquierdo
-  const [selectedItem, setSelectedItem] = useState(null); // Guarda la actividad seleccionada para el Modal
+  const [currentTopTab, setTopTab] = useState('inicio'); 
+  const [activeTab, setActiveTab] = useState('todos');   
+  const [selectedItem, setSelectedItem] = useState(null); 
 
-  // === 2. PERSISTENCIA DE DATOS (LOCALSTORAGE) ===
-  // Carga las actividades desde el navegador o usa las iniciales si no hay nada guardado
-  const [activities, setActivities] = useState(() => {
-    const saved = localStorage.getItem('master_activities');
-    return saved ? JSON.parse(saved) : INITIAL_ITEMS;
-  });
+  // === 2. ESTADOS DE DATOS DINÁMICOS ===
+  const [activities, setActivities] = useState([]);
+  const [registeredIds, setRegisteredIds] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  // Carga las actividades inscritas por este estudiante específico
-  const [registeredIds, setRegisteredIds] = useState(() => {
-    const saved = localStorage.getItem(`reg_${userEmail}`);
-    return saved ? JSON.parse(saved) : [];
-  });
+  // === 3. EFECTO DE CARGA DE DATOS (USEEFFECT + ASYNC/AWAIT) ===
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      setLoading(true);
+      try {
+        // Cargar todas las actividades desde la API
+        const fetchedActivities = await api.getActivities();
+        setActivities(fetchedActivities);
 
-  // === 3. CONTROLADORES Y FUNCIONES OPERATIVAS ===
+        // Si es estudiante, cargar sus inscripciones reales
+        if (!isAdmin) {
+          const fetchedRegs = await api.getRegistrations();
+          setRegisteredIds(fetchedRegs);
+        }
+      } catch (error) {
+        console.error("Error al cargar los datos de la API:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDashboardData();
+  }, [isAdmin]);
+
+  // === 4. CONTROLADORES Y FUNCIONES OPERATIVAS (CONEXIÓN API) ===
   
-  // Función para inscribirse en una actividad
-  const handleInscribirse = (id) => {
+  const handleInscribirse = async (id) => {
     if (registeredIds.includes(id)) return;
-    const updated = [...registeredIds, id];
-    setRegisteredIds(updated);
-    localStorage.setItem(`reg_${userEmail}`, JSON.stringify(updated));
+    try {
+      await api.registerToActivity(id);
+      setRegisteredIds(prev => [...prev, id]);
+    } catch (error) {
+      alert("❌ No se pudo completar tu inscripción en el servidor.");
+    }
   };
 
-  // Función para cancelar la inscripción
-  const handleCancelarInscripcion = (id) => {
-    const updated = registeredIds.filter(regId => regId !== id);
-    setRegisteredIds(updated);
-    localStorage.setItem(`reg_${userEmail}`, JSON.stringify(updated));
+  const handleCancelarInscripcion = async (id) => {
+    try {
+      await api.unregisterFromActivity(id);
+      setRegisteredIds(prev => prev.filter(regId => regId !== id));
+    } catch (error) {
+      alert("❌ Error al cancelar la inscripción.");
+    }
   };
 
-  // Funciones exclusivas para el Administrador (Crear y Eliminar)
-  const handleCreateActivity = (newActivity) => {
-    const updated = [...activities, { ...newActivity, id: Date.now() }];
-    setActivities(updated);
-    localStorage.setItem('master_activities', JSON.stringify(updated));
+  const handleCreateActivity = async (newActivity) => {
+    try {
+      // Mandamos el objeto de la actividad al Back-End
+      const createdActivity = await api.createActivity(newActivity);
+      // El backend retorna la actividad con su ID único generado por PostgreSQL
+      setActivities(prev => [...prev, createdActivity]);
+    } catch (error) {
+      alert("❌ Error al publicar la actividad en el servidor.");
+    }
   };
 
-  const handleDeleteActivity = (id) => {
-    const updated = activities.filter(act => act.id !== id);
-    setActivities(updated);
-    localStorage.setItem('master_activities', JSON.stringify(updated));
-    if (selectedItem?.id === id) setSelectedItem(null); // Cierra el modal si el ítem abierto fue eliminado
+  const handleDeleteActivity = async (id) => {
+    try {
+      await api.deleteActivity(id);
+      setActivities(prev => prev.filter(act => act.id !== id));
+      if (selectedItem?.id === id) setSelectedItem(null); 
+    } catch (error) {
+      alert("❌ Error al eliminar la actividad del servidor.");
+    }
   };
 
-  // === 4. FILTRADO DE DATOS (FRONT-END) ===
-  // Filtra las actividades basándose en la pestaña lateral seleccionada
+  // === 5. FILTRADO DE DATOS ===
   const itemsFiltrados = activities.filter(item => {
     if (activeTab === 'mis-actividades') return registeredIds.includes(item.id);
     if (activeTab === 'todos') return true;
@@ -68,11 +94,18 @@ export default function Dashboard({ userEmail = "estudiante@ulima.edu.pe", onLog
     return false;
   });
 
-  // Extrae el nombre del usuario quitando el "@ulima.edu.pe"
   const displayUserName = userEmail.split('@')[0];
 
-  // === 5. ENRUTADOR DE VISTAS DINÁMICAS (WORKSPACE) ===
+  // === 6. ENRUTADOR DE VISTAS DINÁMICAS ===
   const renderMainWorkspace = () => {
+    if (loading) {
+      return (
+        <div className="dynamic-workspace-panel animate-fade" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '300px' }}>
+          <h3>Cargando información desde la base de datos...</h3>
+        </div>
+      );
+    }
+
     if (currentTopTab === 'horario') {
       return (
         <div className="dynamic-workspace-panel animate-fade">
@@ -154,7 +187,6 @@ export default function Dashboard({ userEmail = "estudiante@ulima.edu.pe", onLog
       );
     }
 
-    // Por defecto renderiza el Catálogo Principal (Main)
     return (
       <Main 
         items={itemsFiltrados} 
@@ -171,7 +203,6 @@ export default function Dashboard({ userEmail = "estudiante@ulima.edu.pe", onLog
     );
   };
 
-  // === 6. ESTRUCTURA VISUAL GENERAL ===
   return (
     <div className="dashboard-master-container">
       <TopNav 
@@ -181,7 +212,7 @@ export default function Dashboard({ userEmail = "estudiante@ulima.edu.pe", onLog
           setTopTab(tab);
           if (tab !== 'inicio') setActiveTab('todos'); 
         }}
-        notifications={[]} // Se envía limpio para simplificar
+        notifications={[]} 
       />
       
       <div className="dashboard-workspace">
