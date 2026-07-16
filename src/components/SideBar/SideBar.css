@@ -1,46 +1,236 @@
-.sidebar {
-  background-color: #1e293b;
-  color: white;
+.sidebar-master-panel {
   width: 260px;
-  padding: 1.5rem;
+  height: 100dvh; /* 💡 "dvh" (Dynamic Viewport Height) se ajusta al espacio visible real sin pasarse */
+  position: fixed; /* 💡 Lo clava a la pantalla para que sea 100% fijo al hacer scroll */
+  top: 0;
+  left: 0;
+  background-color: #ffffff;
+  border-right: 1px solid #eae7e9;
   display: flex;
   flex-direction: column;
+  padding: 32px 16px;
+  box-sizing: border-box;
   justify-content: space-between;
+  z-index: 100; /* Asegura que no se tapen los botones con otros componentes */
 }
-.sidebar-title {
-  font-size: 1.25rem;
-  font-weight: 700;
-  margin-bottom: 2rem;
-  color: #f8fafc;
-}
-.sidebar-menu {
+
+.sidebar-top-content {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 8px;
 }
-.sidebar-btn {
-  background: none;
+
+.sidebar-navigation-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 28px;
+}
+
+.sidebar-group-title {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  color: #9c9ca4;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding-left: 12px;
+  margin-bottom: 8px;
+}
+
+/* BOTÓN BASE DEL MENÚ */
+.sidebar-menu-btn {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  background: transparent;
   border: none;
-  color: #94a3b8;
-  padding: 0.75rem 1rem;
-  text-align: left;
+  padding: 10px 12px;
   border-radius: 8px;
   cursor: pointer;
+  gap: 12px;
+  position: relative;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sidebar-btn-text {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
   font-weight: 500;
-  transition: all 0.2s;
+  color: #45464d;
+  transition: color 0.2s ease;
 }
-.sidebar-btn:hover, .sidebar-btn.active {
-  background-color: #334155;
-  color: white;
+
+.sidebar-icon {
+  width: 18px;
+  height: 18px;
+  color: #7f8087;
+  transition: color 0.2s ease, transform 0.2s ease;
+  flex-shrink: 0;
 }
-.sidebar-footer {
-  border-top: 1px solid #334155;
-  padding-top: 1rem;
-  font-size: 0.85rem;
+
+/* EFECTOS HOVER */
+.sidebar-menu-btn:hover {
+  background-color: #f7f4f6;
 }
-.logout-link {
-  color: #ef4444;
-  cursor: pointer;
-  margin-top: 0.5rem;
+
+.sidebar-menu-btn:hover .sidebar-icon {
+  color: #1b1b1d;
+  transform: translateX(1px);
+}
+
+.sidebar-menu-btn:hover .sidebar-btn-text {
+  color: #1b1b1d;
+}
+
+/* ESTADO ACTIVO */
+.sidebar-menu-btn.active {
+  background-color: #fef1e9;
+}
+
+.sidebar-menu-btn.active .sidebar-icon {
+  color: #f27022;
+}
+
+.sidebar-menu-btn.active .sidebar-btn-text {
+  color: #f27022;
+  font-weight: 600;
+}
+
+/* BADGE CONTADOR */
+.sidebar-counter-badge {
+  margin-left: auto;
+  background-color: #f27022;
+  color: #ffffff;
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(242, 112, 34, 0.2);
+}
+
+/* FOOTER DEL PANEL */
+.sidebar-footer-account {
+  border-top: 1px solid #eae7e9;
+  padding-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sidebar-user-meta {
+  padding: 0 12px;
+}
+
+.sidebar-user-email-text {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  color: #7f8087;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   display: block;
+}
+
+/* BOTÓN DE CIERRE DE SESIÓN */
+.sidebar-logout-action-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: transparent;
+  border: none;
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #45464d;
+  transition: all 0.2s ease;
+}
+
+.logout-icon {
+  width: 18px;
+  height: 18px;
+  color: #7f8087;
+  transition: color 0.2s ease;
+}
+
+.sidebar-logout-action-btn:hover {
+  background-color: #fef2f2;
+  color: #ef4444;
+}
+
+.sidebar-logout-action-btn:hover .logout-icon {
+  color: #ef4444;
+}
+
+/* ==========================================================
+   📱 RESPONSIVE ADAPTADO PARA IPHONE SE / TELÉFONOS (MÓVIL)
+   ========================================================== */
+@media (max-width: 768px) {
+  .sidebar-master-panel {
+    position: fixed;
+    bottom: 0;
+    top: auto;
+    left: 0;
+    width: 100vw;
+    height: 68px; /* Alto de tab-bar nativo de iOS */
+    border-right: none;
+    border-top: 1px solid #eae7e9;
+    padding: 4px 8px;
+    z-index: 999;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.05);
+  }
+
+  .sidebar-top-content {
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-around;
+  }
+
+  .sidebar-navigation-group {
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-around;
+    gap: 2px;
+    margin-bottom: 0;
+  }
+
+  /* Ocultamos títulos y cuentas en la vista móvil para optimizar espacio */
+  .sidebar-group-title, 
+  .sidebar-footer-account,
+  .sidebar-btn-text { 
+    display: none; 
+  }
+
+  /* Ajustamos los botones para que parezcan apps en un dock */
+  .sidebar-menu-btn {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 8px;
+    gap: 4px;
+    width: auto;
+    flex: 1;
+  }
+
+  .sidebar-icon {
+    width: 22px; /* Un poco más grandes para que sean fáciles de tocar */
+    height: 22px;
+  }
+
+  .sidebar-counter-badge {
+    position: absolute;
+    top: 2px;
+    right: 18%;
+    margin-left: 0;
+    font-size: 9px;
+    padding: 1px 5px;
+  }
 }

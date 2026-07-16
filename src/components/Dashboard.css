@@ -1,6 +1,426 @@
-.dashboard-layout {
+/* ==========================================================================
+   ESTILOS GENERALES DEL DASHBOARD (CONTENEDOR MAESTRO Y PANELES)
+   ========================================================================== */
+
+.dashboard-master-container {
   display: flex;
-  height: 100vh;
-  width: 100vw;
-  overflow: hidden;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #fcf8fa;
+}
+
+.dashboard-workspace {
+  display: flex;
+  flex: 1;
+  position: relative;
+  max-width: 100%;
+}
+
+/* 💻 Para computadoras: Evita que el contenido se meta debajo del Sidebar fijo */
+@media (min-width: 769px) {
+  .dashboard-workspace {
+    margin-left: 260px; /* Empuja todo el espacio de trabajo 260px a la derecha */
+    width: calc(100% - 260px); /* Ajusta el ancho para que no se salga de la pantalla */
+    box-sizing: border-box;
+  }
+}
+
+/* --- Contenedor Dinámico para Horario, Trámites y Ajustes --- */
+.dynamic-workspace-panel {
+  flex: 1;
+  background-color: #ffffff;
+  border-radius: 16px;
+  padding: 32px;
+  margin: 24px;
+  border: 1px solid #eae7e9;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.01);
+  /* 🔒 Seguridad anti-desborde global */
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.panel-header-title {
+  margin-bottom: 28px;
+}
+
+.panel-header-title h2 {
+  font-family: 'Hanken Grotesk', sans-serif;
+  font-size: 24px;
+  color: #1b1b1d;
+  margin: 0 0 4px 0;
+}
+
+.panel-header-title p {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  color: #7f8087;
+  margin: 0;
+}
+
+.settings-row-item.logout-row {
+  border-top: 1px solid #f4f2f4;
+  margin-top: 4px;
+}
+
+.settings-logout-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #fef2f2;
+  border: 1px solid #fee2e2;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #ef4444;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  transition: all 0.2s ease;
+}
+
+.settings-logout-btn:hover {
+  background-color: #ef4444;
+  color: #ffffff;
+  border-color: #ef4444;
+}
+
+.settings-logout-icon {
+  width: 16px;
+  height: 16px;
+  stroke: currentColor;
+}
+
+
+/* ==========================================================================
+   SECCIÓN: MI HORARIO SEMANAL (ESTRUCTURA DE TABLA)
+   ========================================================================== */
+
+.schedule-data-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 12px;
+  font-family: 'Inter', sans-serif;
+}
+
+.schedule-data-table th {
+  background-color: #fcf8fa;
+  color: #45464d;
+  font-weight: 600;
+  font-size: 14px;
+  padding: 14px;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.schedule-data-table td {
+  background-color: #ffffff;
+  border: 1px dashed #eae7e9;
+  border-radius: 12px;
+  height: 90px;
+  width: 18%;
+  vertical-align: middle;
+  padding: 6px;
+}
+
+.schedule-data-table td.time-col {
+  background-color: #fcf8fa;
+  border: none;
+  font-weight: 600;
+  font-size: 12px;
+  color: #7f8087;
+  text-align: center;
+  width: 10%;
+}
+
+/* Bloques internos de asignaturas */
+.course-block {
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.4;
+  text-align: left;
+}
+
+.course-block span {
+  font-size: 11px;
+  font-weight: 400;
+  color: #555555;
+  display: block;
+  margin-top: 2px;
+}
+
+/* Código de colores universitarios para cursos */
+.color-1 { background-color: #e0f2fe; color: #0369a1; border-left: 4px solid #0284c7; }
+.color-2 { background-color: #fef3c7; color: #b45309; border-left: 4px solid #d97706; }
+.color-3 { background-color: #f3e8ff; color: #6b21a8; border-left: 4px solid #9333ea; }
+.color-4 { background-color: #dcfce7; color: #15803d; border-left: 4px solid #16a34a; }
+
+
+/* ==========================================================================
+   SECCIÓN: MESA DE TRÁMITES ACADÉMICOS
+   ========================================================================== */
+
+.tramites-grid-layout {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.tramite-action-card {
+  background-color: #fcf8fa;
+  border: 1px solid #eae7e9;
+  border-radius: 12px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.2s, border-color 0.2s;
+}
+
+.tramite-action-card:hover {
+  transform: translateY(-2px);
+  border-color: #f27022;
+}
+
+.tramite-action-card h4 {
+  font-size: 16px;
+  margin: 0 0 10px 0;
+  color: #1b1b1d;
+  font-family: 'Hanken Grotesk', sans-serif;
+}
+
+.tramite-action-card p {
+  font-size: 13px;
+  color: #7f8087;
+  line-height: 1.5;
+  margin: 0 0 20px 0;
+  font-family: 'Inter', sans-serif;
+}
+
+.tramite-init-btn {
+  background-color: #1b1b1d;
+  color: #ffffff;
+  border: none;
+  padding: 10px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  transition: background-color 0.2s;
+}
+
+.tramite-init-btn:hover {
+  background-color: #f27022;
+}
+
+
+/* ==========================================================================
+   SECCIÓN: GESTIÓN DE NOTIFICACIONES (DENTRO DEL TOPNAV)
+   ========================================================================== */
+
+.clear-all-notifs-btn {
+  background: none;
+  border: none;
+  color: #dc2626;
+  font-size: 12px;
+  cursor: pointer;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.clear-all-notifs-btn:hover {
+  background-color: #fff5f5;
+}
+
+.notif-content-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.delete-single-notif-btn {
+  background: none;
+  border: none;
+  color: #a0a0a9;
+  font-size: 18px;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0 4px;
+  transition: color 0.15s;
+}
+
+.delete-single-notif-btn:hover {
+  color: #dc2626;
+}
+
+
+/* ==========================================================================
+   SECCIÓN: CONFIGURACIONES Y AJUSTES
+   ========================================================================== */
+
+.settings-view-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.settings-options-card {
+  width: 100%;
+  max-width: 550px;
+  background: #ffffff;
+  border: 1px solid #eae7e9;
+  border-radius: 12px;
+  padding: 8px 20px;
+  margin-bottom: 24px;
+  text-align: left;
+  box-sizing: border-box; /* Asegura que paddings no ensanchen la tarjeta */
+}
+
+.settings-row-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 0;
+  border-bottom: 1px solid #f4f2f4;
+  gap: 16px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.settings-row-item:last-child {
+  border-bottom: none;
+}
+
+.settings-row-item h4 {
+  margin: 0 0 4px 0;
+  font-size: 14px;
+  color: #1b1b1d;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+}
+
+.settings-row-item p {
+  margin: 0;
+  font-size: 12px;
+  color: #7f8087;
+  font-family: 'Inter', sans-serif;
+  line-height: 1.4;
+}
+
+.settings-action-inline-btn {
+  background: #f4f2f4;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #1b1b1d;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  transition: background-color 0.15s;
+  flex-shrink: 0; /* Evita que el botón se deforme si hay texto largo */
+}
+
+.settings-action-inline-btn:hover {
+  background-color: #eae7e9;
+}
+
+.settings-toggle-switch {
+  accent-color: #f27022;
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.panel-action-btn {
+  background-color: #f4f2f4;
+  color: #1b1b1d;
+  border: 1px solid #eae7e9;
+  padding: 10px 20px;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  transition: all 0.2s;
+}
+
+.panel-action-btn:hover {
+  background-color: #1b1b1d;
+  color: #ffffff;
+  border-color: #1b1b1d;
+}
+
+
+/* ==========================================================================
+   ANIMACIONES GLOBALES DE INTERFAZ
+   ========================================================================== */
+
+.animate-fade {
+  animation: fadeInWorkspace 0.25s ease-out;
+}
+
+@keyframes fadeInWorkspace {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* ==========================================================================
+   📱 MEDIAS QUERIES / RESPONSIVE COMPLETOS
+   ========================================================================== */
+
+/* Tablets o pantallas medianas */
+@media (max-width: 1024px) {
+  .schedule-data-table {
+    display: block;
+    overflow-x: auto;
+  }
+}
+
+/* 📱 Celulares (Ajustes críticos para iPhone SE, 12 mini y similares) */
+@media (max-width: 768px) {
+  .dashboard-master-container {
+    padding-bottom: 75px; /* Evita que el menú inferior tape el botón de regresar */
+  }
+
+  .dynamic-workspace-panel {
+    padding: 16px; /* Bajamos el padding exagerado de 32px a 16px */
+    margin: 12px;  /* Margen exterior más prudente */
+  }
+
+  .panel-header-title {
+    margin-bottom: 20px;
+  }
+
+  .settings-options-card {
+    padding: 4px 14px; /* Menos espacio interno lateral */
+  }
+
+  /* Ajuste clave: Volvemos la fila un bloque vertical para que quepan holgadamente texto y acción */
+  .settings-row-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 0;
+  }
+
+  /* Empujamos los botones y switches a la derecha de sus bloques */
+  .settings-action-inline-btn,
+  .settings-toggle-switch,
+  .settings-logout-btn {
+    align-self: flex-end;
+  }
 }
