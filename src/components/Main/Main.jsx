@@ -22,6 +22,8 @@ export default function Main({
   const [fecha, setFecha] = useState('');
   const [lugar, setLugar] = useState('');
   const [imagen, setImagen] = useState('');
+  const [carrera, setCarrera] = useState('Todas');
+  const [descripcion, setDescripcion] = useState('');
 
   // 🕹️ EFECTO SUTIL: Calcula la posición del mouse para crear un destello de luz dinámico (Radial Gradient)
   const handleMouseMove = (e) => {
@@ -52,8 +54,9 @@ export default function Main({
     e.preventDefault();
     if (!titulo || !fecha || !lugar) return;
     const imgUrl = imagen.trim() !== '' ? imagen : "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=600&q=80";
-    onCreateActivity({ titulo, tipo, fecha, lugar, imagen: imgUrl });
-    setTitulo(''); setFecha(''); setLugar(''); setImagen(''); setShowForm(false);
+    const desc = descripcion.trim() !== '' ? descripcion : "Sin descripción disponible.";
+    onCreateActivity({ titulo, tipo, fecha, lugar, imagen: imgUrl, carrera, descripcion: desc });
+    setTitulo(''); setFecha(''); setLugar(''); setImagen(''); setCarrera('Todas'); setDescripcion(''); setShowForm(false);
   };
 
   return (
@@ -119,6 +122,18 @@ export default function Main({
             <div className="input-block">
               <label>Lugar / Aula</label>
               <input type="text" placeholder="Ej: Auditorio Central" value={lugar} onChange={(e) => setLugar(e.target.value)} />
+            </div>
+            <div className="input-block">
+              <label>Carrera</label>
+              <select value={carrera} onChange={(e) => setCarrera(e.target.value)}>
+                <option value="Todas">Todas</option>
+                <option value="Sistemas">Sistemas</option>
+                <option value="Comunicaciones">Comunicaciones</option>
+              </select>
+            </div>
+            <div className="input-block full-width-input">
+              <label>Descripción</label>
+              <input type="text" placeholder="Breve descripción de la actividad" value={descripcion} onChange={(e) => setDescripcion(e.target.value)} />
             </div>
             <div className="input-block full-width-input">
               <label>URL de la Imagen (Opcional)</label>
